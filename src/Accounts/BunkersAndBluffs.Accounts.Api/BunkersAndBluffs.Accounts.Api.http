@@ -1,0 +1,6 @@
+@BunkersAndBluffs.Accounts.Api_HostAddress = http://localhost:5109
+
+GET {{BunkersAndBluffs.Accounts.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
