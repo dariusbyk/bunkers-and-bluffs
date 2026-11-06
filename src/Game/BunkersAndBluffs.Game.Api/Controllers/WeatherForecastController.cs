@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BunkersAndBluffs.Game.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/game/[controller]")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries =
