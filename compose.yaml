@@ -1,0 +1,60 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: src/Web/BunkersAndBluffs.Gateway/Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+    depends_on:
+      accounts:
+        condition: service_healthy
+      game:
+        condition: service_healthy
+  accounts:
+    build:
+      context: .
+      dockerfile: src/Accounts/BunkersAndBluffs.Accounts.Api/Dockerfile
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+  game:
+    build:
+      context: .
+      dockerfile: src/Game/BunkersAndBluffs.Game.Api/Dockerfile
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD}
+    volumes:
+      - sql_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "${MSSQL_SA_PASSWORD}", "-Q", "SELECT 1", "-C", "-b"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+volumes:
+  sql_data:
