@@ -1,4 +1,4 @@
-﻿namespace BunkersAndBluffs.Game.IntegrationTests
+﻿namespace BunkersAndBluffs.Game.Application.Tests
 {
     public class UnitTest1
     {
