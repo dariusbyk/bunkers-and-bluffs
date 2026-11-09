@@ -29,6 +29,8 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
+    environment:
+      ConnectionStrings__Accounts: ${ConnectionStrings__Accounts}
   game:
     build:
       context: .
